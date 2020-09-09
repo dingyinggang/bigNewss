@@ -33,7 +33,7 @@
                 <!-- 密码输入框 -->
                 <div class="layui-form-item">
                     <i class="layui-icon layui-icon-password"></i>
-                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    <input type="password" name="password" required lay-verify="required|pwd" placeholder="请输入密码" autocomplete="off" class="layui-input">
                 </div>
                 <!-- 登录按钮 -->
                 <div class="layui-form-item">
@@ -62,12 +62,12 @@
                 <!-- 密码输入框 -->
                 <div class="layui-form-item">
                     <i class="layui-icon layui-icon-password"></i>
-                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    <input type="password" name="password" required lay-verify="required|pwd" placeholder="请输入密码" autocomplete="off" class="layui-input">
                 </div>
                 <!-- 确认密码 -->
                 <div class="layui-form-item">
                     <i class="layui-icon layui-icon-password"></i>
-                    <input type="password" name="repassword" required lay-verify="required" placeholder="再次确认密码" autocomplete="off" class="layui-input">
+                    <input type="password" name="repassword" required lay-verify="required|pwd|repwd" placeholder="再次确认密码" autocomplete="off" class="layui-input">
                 </div>
                 <!-- 注册按钮 -->
                 <div class="layui-form-item">
@@ -83,6 +83,8 @@
 
         </div>
     </div>
+    <!-- 导入layui的js文件 -->
+    <script src="../assets/lib/layui/layui.all.js"></script>
 
     <!-- 导入jQuery -->
     <script src="../assets/lib/jquery.js"></script>
