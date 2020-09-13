@@ -1,5 +1,7 @@
 $(function() {
     var btnAddCatelayer = layui.layer
+
+    var form = layui.form
         //获取文章类别
     getCatelist()
 
@@ -56,6 +58,55 @@ $(function() {
 
                 //关闭弹出层
                 layer.close(btnAddCate)
+
+
+            }
+        })
+    })
+
+    //展示编辑弹框
+    var editCateIndex = null
+    $('body').on('click', '#btn-edit', function() {
+        editCateIndex = layer.open({
+            type: 1,
+            area: ['500px', ['249px']],
+            title: '修改文章分类',
+            content: $('#edit-dialog').html()
+        })
+
+        // 点击编辑之后，获取到自定义的id
+        var cateID = $(this).attr('data-Id')
+
+        $.ajax({
+            url: `/my/article/cates/${cateID}`,
+            type: 'get',
+            success: function(res) {
+                if (res.status !== 0) {
+                    return layer.msg(res.message)
+                }
+                // 使用form.val()对表单赋值
+                form.val('edit-form', res.data)
+            }
+        })
+    })
+
+    // 编辑文章分类
+    $('body').on('submit', '#form-edit', function(e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: '/my/article/updatecate',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(res) {
+                if (res.status !== 0) {
+                    return layer.mag(res.message)
+                }
+                layer.msg(res.message)
+
+                getCatelist()
+
+                layer.close(editCateIndex)
 
 
             }
