@@ -112,4 +112,31 @@ $(function() {
             }
         })
     })
+
+    //删除文章分类
+    //事件委托
+    $('tbody').on('click', '.btn-delete', function() {
+        var cateID = $(this).attr('data-id')
+        layer.confirm('确认删除?', { icon: 3, title: '提示' }, function(index) {
+            //获取分类的id
+
+
+            $.ajax({
+                url: `/my/article/deletecate/${cateID}`,
+                type: 'get',
+                success: function(res) {
+                    if (res.status !== 0) {
+                        return layer.msg(res.message)
+                    }
+                    layer.msg(res.message)
+
+                    getCatelist()
+
+                    layer.close(index);
+                }
+            })
+
+        });
+    })
+
 })
