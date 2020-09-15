@@ -1,7 +1,8 @@
 $(function() {
     var form = layui.form
-        // 定义一个查询的参数对象，
-        // 将来请求数据的时候，需要将参数对象提交到服务器
+    var laypage = layui.laypage;
+    // 定义一个查询的参数对象，
+    // 将来请求数据的时候，需要将参数对象提交到服务器
     var q = {
         pagenum: 1, //设置当前页码值在1
         pagesize: 2, //默认每页显示2条数据
@@ -38,13 +39,16 @@ $(function() {
             type: 'get',
             data: q,
             success: function(res) {
-                console.log(res);
+                // console.log(res);
                 if (res.status !== 0) {
                     return layer.msg(res.message)
                 }
                 var tableHtml = template('tpl-table', res)
 
                 $('tbody').html(tableHtml)
+
+                //调用渲染分页的方法
+                remderPage(res.total)
             }
 
         })
@@ -58,7 +62,7 @@ $(function() {
             url: '/my/article/cates',
             type: 'get',
             success: function(res) {
-                console.log(res);
+                // console.log(res);
                 if (res.status !== 0) {
                     return layer.msg(res.message)
                 }
@@ -87,4 +91,41 @@ $(function() {
         // 根据最新的筛选条件，重新渲染表格的数据
         initTable()
     })
+
+    // 定义渲染分页的方法
+    function remderPage(total) {
+        // console.log(total);
+        //调用laypage.render()方法渲染分页的结构
+        laypage.render({
+            elem: 'pageBox', //分页的容器的id 不用#
+            count: total, //数据总数，从服务端得到
+            limit: q.pagesize, //每页显示的条数
+            curr: q.pagenum, //起始页号码
+            limits: [2, 3, 5, 10], //每页条数的选择项。
+            layout: ['count', 'limit', 'prev', 'page', 'next', 'skip'],
+
+            //分页发生切换时，触发jump回调
+            //触发jump回调的两种方式：
+            //1、点击页码的时候，触发
+            //2、只要调用了laypage.render（）方法，触发
+            jump: function(obj, first) {
+                // console.log(obj.curr);
+                // console.log(first);
+                // 如果first的值为true，则为方式2触发
+                //否则为方式1
+
+                //把最新的页码值赋值给q
+                q.pagenum = obj.curr
+
+                //把这个最新的条目数，赋值到q
+                q.pagesize = obj.limit
+
+                // initTable() 直接调用会产生死循环 递归
+                if (!first) {
+                    initTable()
+                }
+
+            }
+        })
+    }
 })
