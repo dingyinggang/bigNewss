@@ -128,4 +128,43 @@ $(function() {
             }
         })
     }
+
+    // 删除文章
+    $('tbody').on('click', '.delete-btn', function() {
+
+        //获取删除按钮的个数 
+        var len = $('.delete-btn').length
+        console.log(len);
+
+        //获取到文章的id
+        var artId = $(this).attr('data-id')
+
+        layer.confirm('是否删除文章?', { icon: 3, title: '提示' }, function(index) {
+            $.ajax({
+                url: `/my/article/delete/${artId}`,
+                type: 'get',
+                success: function(res) {
+                    // console.log(res);
+                    if (res.status !== 0) {
+                        return layer.msg(res.message)
+                    }
+                    layer.msg(res.message)
+
+                    //根据当前页面删除按钮的个数做判断
+                    //如果按钮的个数 > 1,不做处理
+                    //如果按钮的个数 = 1 ，说明只剩一条，需要进行处理
+                    if (len === 1) {
+                        //如果len等于1，证明删除完毕后，页面上无数据
+                        //页码值最小必须是1
+                        q.pagenum = q.pagenum === 1 ? 1 : q.pagenum - 1
+                    }
+                    initTable()
+
+                    layer.close(index);
+                }
+            })
+
+
+        })
+    })
 })
